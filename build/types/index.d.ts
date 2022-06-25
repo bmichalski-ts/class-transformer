@@ -105,3 +105,4 @@ export declare function deserializeArray<T>(
   json: string,
   options?: ClassTransformOptions
 ): T[];
+export { defaultMetadataStorage as metadataStorage } from './storage.js';

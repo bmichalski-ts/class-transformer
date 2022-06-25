@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deserializeArray = exports.deserialize = exports.serialize = exports.classToClassFromExist = exports.instanceToInstance = exports.plainToClassFromExist = exports.plainToInstance = exports.plainToClass = exports.classToPlainFromExist = exports.instanceToPlain = exports.classToPlain = exports.ClassTransformer = void 0;
+exports.metadataStorage = exports.deserializeArray = exports.deserialize = exports.serialize = exports.classToClassFromExist = exports.instanceToInstance = exports.plainToClassFromExist = exports.plainToInstance = exports.plainToClass = exports.classToPlainFromExist = exports.instanceToPlain = exports.classToPlain = exports.ClassTransformer = void 0;
 const ClassTransformer_1 = require("./ClassTransformer");
 var ClassTransformer_2 = require("./ClassTransformer");
 Object.defineProperty(exports, "ClassTransformer", { enumerable: true, get: function () { return ClassTransformer_2.ClassTransformer; } });
@@ -83,4 +83,6 @@ function deserializeArray(cls, json, options) {
     return classTransformer.deserializeArray(cls, json, options);
 }
 exports.deserializeArray = deserializeArray;
+var storage_js_1 = require("./storage.js");
+Object.defineProperty(exports, "metadataStorage", { enumerable: true, get: function () { return storage_js_1.defaultMetadataStorage; } });
 //# sourceMappingURL=index.js.map
