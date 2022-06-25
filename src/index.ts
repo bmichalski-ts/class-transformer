@@ -157,3 +157,5 @@ export function deserialize<T>(cls: ClassConstructor<T>, json: string, options?:
 export function deserializeArray<T>(cls: ClassConstructor<T>, json: string, options?: ClassTransformOptions): T[] {
   return classTransformer.deserializeArray(cls, json, options);
 }
+
+export { defaultMetadataStorage as metadataStorage } from './storage.js';
