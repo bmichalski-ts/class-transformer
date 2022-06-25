@@ -365,6 +365,12 @@ class TransformOperationExecutor {
                 return !metadata.options || !metadata.options.groups || !metadata.options.groups.length;
             });
         }
+        if (metadatas.length === 0) {
+            return {
+                value,
+                customTransformationWasApplied: false,
+            };
+        }
         metadatas.forEach(metadata => {
             value = metadata.transformFn({ value, key, obj, type: transformationType, options: this.options });
         });
