@@ -311,33 +311,39 @@ export class TransformOperationExecutor {
           let finalValue;
 
           if (this.transformationType === TransformationType.CLASS_TO_PLAIN) {
-            // Get original value
-            finalValue = value[transformKey];
             // Apply custom transformation
-            finalValue = this.applyCustomTransformations(
-              finalValue,
+            const customTransformationResult = this.applyCustomTransformations(
+              value[transformKey],
               targetType as Function,
               transformKey,
               value,
               this.transformationType
             );
-            // If nothing change, it means no custom transformation was applied, so use the subValue.
-            finalValue = value[transformKey] === finalValue ? subValue : finalValue;
-            // Apply the default transformation
-            finalValue = this.transform(subSource, finalValue, type, arrayType, isSubValueMap, level + 1);
+
+            if (customTransformationResult.customTransformationWasApplied) {
+              finalValue = customTransformationResult.value;
+            } else {
+              // If no custom transformation was applied, use the subValue and apply the default transformation
+              finalValue = this.transform(subSource, subValue, type, arrayType, isSubValueMap, level + 1);
+            }
           } else {
             if (subValue === undefined && this.options.exposeDefaultValues) {
               // Set default value if nothing provided
               finalValue = newValue[newValueKey];
             } else {
-              finalValue = this.transform(subSource, subValue, type, arrayType, isSubValueMap, level + 1);
-              finalValue = this.applyCustomTransformations(
-                finalValue,
+              const customTransformationResult = this.applyCustomTransformations(
+                subValue,
                 targetType as Function,
                 transformKey,
                 value,
                 this.transformationType
               );
+
+              if (customTransformationResult.customTransformationWasApplied) {
+                finalValue = customTransformationResult.value;
+              } else {
+                finalValue = this.transform(subSource, subValue, type, arrayType, isSubValueMap, level + 1);
+              }
             }
           }
 
@@ -349,9 +355,8 @@ export class TransformOperationExecutor {
             }
           }
         } else if (this.transformationType === TransformationType.CLASS_TO_CLASS) {
-          let finalValue = subValue;
-          finalValue = this.applyCustomTransformations(
-            finalValue,
+          const { value: finalValue } = this.applyCustomTransformations(
+            subValue,
             targetType as Function,
             key,
             value,
@@ -383,8 +388,15 @@ export class TransformOperationExecutor {
     key: string,
     obj: any,
     transformationType: TransformationType
-  ): boolean {
+  ): { value: any; customTransformationWasApplied: boolean } {
     let metadatas = defaultMetadataStorage.findTransformMetadatas(target, key, this.transformationType);
+
+    if (metadatas.length === 0) {
+      return {
+        value,
+        customTransformationWasApplied: false,
+      };
+    }
 
     // apply versioning options
     if (this.options.version !== undefined) {
@@ -412,7 +424,10 @@ export class TransformOperationExecutor {
       value = metadata.transformFn({ value, key, obj, type: transformationType, options: this.options });
     });
 
-    return value;
+    return {
+      value,
+      customTransformationWasApplied: true,
+    };
   }
 
   // preventing circular references
