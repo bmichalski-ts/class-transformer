@@ -118,7 +118,7 @@ describe('custom transformation decorator', () => {
     expect(classedUser5).toBeInstanceOf(User);
     expect(classedUser5.id).toEqual(1);
     expect(classedUser5.name).toEqual('Johny Cage');
-    expect(classedUser5.lastVisitDate).toEqual(new Date(plainUser.lastVisitDate).toString());
+    expect(classedUser5.lastVisitDate).toEqual(plainUser.lastVisitDate.toString());
   });
 
   it('@Transform decorator callback should be given correct arguments', () => {

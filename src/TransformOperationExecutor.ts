@@ -420,6 +420,13 @@ export class TransformOperationExecutor {
       });
     }
 
+    if (metadatas.length === 0) {
+      return {
+        value,
+        customTransformationWasApplied: false,
+      };
+    }
+
     metadatas.forEach(metadata => {
       value = metadata.transformFn({ value, key, obj, type: transformationType, options: this.options });
     });
